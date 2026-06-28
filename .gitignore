@@ -68,3 +68,4 @@ core.*
 # =====================
 .DS_Store
 Thumbs.db
+toolchain-build.log
