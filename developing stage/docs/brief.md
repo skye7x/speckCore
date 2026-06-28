@@ -482,6 +482,8 @@ make ARCH=x86_64 olddefconfig
 This takes 10–30 minutes depending on your machine.
 The `-j$(nproc)` flag uses all your CPU cores.
 
+before make sure u: ```sudo pacman -S bc```
+
 ```bash
 cd $SPECK_SOURCES/linux
 
@@ -522,6 +524,32 @@ You will see the kernel boot and then panic with "No working init found"
 or similar. That is correct — you have not built the initramfs yet.
 The important thing is the kernel starts and prints boot messages.
 Press Ctrl+C to quit QEMU.
+
+it can look like:
+```
+Linux version 7.2.0-rc1 (bartek@cachyos) (x86_64-linux-musl-gcc (GCC) 9.4.0, GNU ld (GNU Binutils) 2.44) #1 SMP PREEMPT Sun Jun 28 23:19:25 CEST 2026
+Command line: console=ttyS0 panic=1
+BIOS-provided physical RAM map:
+BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff]  System RAM
+BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff]  device reserved
+BIOS-e820: [gap 0x00000000000a0000-0x00000000000effff]
+BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff]  device reserved
+BIOS-e820: [mem 0x0000000000100000-0x000000000ffdffff]  System RAM
+BIOS-e820: [mem 0x000000000ffe0000-0x000000000fffffff]  device reserved
+BIOS-e820: [gap 0x0000000010000000-0x00000000fffbffff]
+BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff]  device reserved
+BIOS-e820: [gap 0x0000000100000000-0x000000fcffffffff]
+BIOS-e820: [mem 0x000000fd00000000-0x000000ffffffffff]  device reserved
+NX (Execute Disable) protection: active
+APIC: Static calls initialized
+DMI: SMBIOS 2.8 present.
+DMI: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Arch Linux 1.17.0-2-2 04/01/2014
+DMI: Memory slots populated: 1/1
+tsc: Fast TSC calibration using PIT
+tsc: Detected 2111.877 MHz processor
+last_pfn = 0xffe0 max_arch_pfn = 0x400000000
+MTRR map: 4 entries (3 fixed + 1 variable; max 19), built from 8 variable MTRRs
+```
 
 ---
 
