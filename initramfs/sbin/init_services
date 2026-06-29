@@ -1,0 +1,13 @@
+#!/bin/sh
+# SpeckCore service startup — runs after /init setup
+
+# Start getty on tty1 (login console)
+/sbin/getty -L tty1 0 vt100 &
+/sbin/getty -L tty2 0 vt100 &
+
+# Wait forever (PID 1 must never exit)
+while true; do
+    # Reap zombie processes
+    wait
+    sleep 1
+done

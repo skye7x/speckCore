@@ -1,0 +1,121 @@
+#!/bin/sh
+# SpeckCore /init — PID 1 boot script
+# This file is the very first program the kernel runs.
+
+# ============================================================
+# STEP 1: Mount essential virtual filesystems
+# ============================================================
+mount -t proc     proc     /proc
+mount -t sysfs    sysfs    /sys
+mount -t devtmpfs devtmpfs /dev
+mount -t tmpfs    tmpfs    /dev/pts -o mode=0620,gid=5
+mount -t tmpfs    tmpfs    /run  -o mode=0755
+mount -t tmpfs    tmpfs    /tmp  -o mode=1777
+
+# Create /dev/pts directory
+mkdir -p /dev/pts
+mount -t devpts devpts /dev/pts -o mode=0620,gid=5
+
+# ============================================================
+# STEP 2: Set up logging
+# ============================================================
+# Redirect kernel messages to console only
+echo 3 > /proc/sys/kernel/printk 2>/dev/null || true
+
+# ============================================================
+# STEP 3: Start device manager (mdev)
+# ============================================================
+# mdev is BusyBox's lightweight udev replacement
+# It listens for kernel uevents and creates /dev entries
+echo "" > /proc/sys/kernel/hotplug
+mdev -s 2>/dev/null
+echo /sbin/mdev > /proc/sys/kernel/hotplug
+
+# ============================================================
+# STEP 4: Set up loopback network
+# ============================================================
+ip link set lo up 2>/dev/null || ifconfig lo up 2>/dev/null || true
+
+# ============================================================
+# STEP 5: Set hostname
+# ============================================================
+hostname speckcore
+
+# ============================================================
+# STEP 6: Check for persistent storage
+# ============================================================
+# SpeckCore can optionally save data to a disk partition
+# labeled "SPECKLABEL". If found, mount it and replay packages.
+PERSIST_DEVICE=""
+for dev in /dev/sd* /dev/vd* /dev/nvme*; do
+    if [ -b "$dev" ] 2>/dev/null; then
+        label=$(blkid -s LABEL -o value "$dev" 2>/dev/null)
+        if [ "$label" = "SPECKLABEL" ]; then
+            PERSIST_DEVICE="$dev"
+            break
+        fi
+    fi
+done
+
+if [ -n "$PERSIST_DEVICE" ]; then
+    mkdir -p /opt/persist
+    mount "$PERSIST_DEVICE" /opt/persist -o rw
+    echo "SpeckCore: persistence found on $PERSIST_DEVICE"
+    
+    # Replay installed packages from the persistent list
+    if [ -f /opt/persist/installed.list ]; then
+        while IFS= read -r pkg; do
+            if [ -f "/opt/persist/specks/$pkg" ]; then
+                LOOP=$(losetup -f)
+                losetup "$LOOP" "/opt/persist/specks/$pkg"
+                mkdir -p "/opt/mnt/$pkg"
+                mount -t squashfs -o ro "$LOOP" "/opt/mnt/$pkg"
+                echo "SpeckCore: loaded $pkg"
+            fi
+        done < /opt/persist/installed.list
+    fi
+fi
+
+# ============================================================
+# STEP 7: Set correct permissions
+# ============================================================
+chmod 755 /tmp /run
+chown -R 1000:1000 /home/speck 2>/dev/null || true
+
+# ============================================================
+# STEP 8: Start the session
+# ============================================================
+# Check if we should boot to GUI or console
+# (GUI requires a GPU/KMS — in a headless VM, we drop to console)
+
+BOOT_MODE="gui"
+
+# Check if a display is available
+if [ ! -e /dev/dri/card0 ] && [ ! -e /dev/dri/card1 ]; then
+    echo "SpeckCore: no GPU found, booting to console"
+    BOOT_MODE="console"
+fi
+
+if [ "$BOOT_MODE" = "gui" ]; then
+    # Start the Wayland session as the speck user
+    # We use 'su' to drop from root to the speck user
+    # XDG_RUNTIME_DIR is required by Wayland
+    mkdir -p /run/user/1000
+    chmod 700 /run/user/1000
+    chown 1000:1000 /run/user/1000
+    
+    export XDG_RUNTIME_DIR=/run/user/1000
+    
+    # Start the compositor as speck user
+    # (This line will be replaced with labwc after Phase 7)
+    # For now, start a getty on tty1 for testing
+    su -c "env XDG_RUNTIME_DIR=/run/user/1000 /sbin/start-session" speck &
+fi
+
+# ============================================================
+# STEP 9: Start a getty on tty1 for console access
+# ============================================================
+# This gives you a login prompt on the virtual console
+# even when the GUI is running (switch with Ctrl+Alt+F1)
+exec /sbin/init_services
+

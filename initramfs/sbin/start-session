@@ -1,0 +1,8 @@
+#!/bin/sh
+# SpeckCore Wayland session starter
+# This will be replaced in Phase 7 with the real compositor launch
+
+echo "SpeckCore: Wayland session not yet installed."
+echo "Press Enter for a shell."
+read _
+exec /bin/sh
