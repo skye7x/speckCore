@@ -582,6 +582,10 @@ make ARCH=x86_64 defconfig
 Now customize it for SpeckCore.
 Open the interactive configurator:
 
+b4 make sure u have:
+```
+sudo pacman -S ncurses
+```
 ```bash
 make ARCH=x86_64 menuconfig
 ```
@@ -663,7 +667,7 @@ CONFIG_MDEV_DAEMON=y
 EOF
 
 # Regenerate
-make ARCH=x86_64 olddefconfig
+make ARCH=x86_64 oldconfig
 ```
 
 ### 3.3 — Compile BusyBox
@@ -685,6 +689,7 @@ file busybox
 
 ### 3.4 — Install BusyBox into the initramfs
 
+IF IT NOT WORKS THEN CHECK PATHS TOOLCHAIN AND BIN!
 ```bash
 # Install into the staging sysroot
 make ARCH=x86_64 \
