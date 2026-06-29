@@ -1,0 +1,41 @@
+src/java_raw_api.lo: ../src/java_raw_api.c \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/stdc-predef.h \
+ include/ffi.h include/ffitarget.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/stddef.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/bits/alltypes.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/limits.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/features.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/bits/limits.h \
+ ../include/ffi_common.h fficonfig.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/alloca.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/string.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/strings.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/stdlib.h
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/stdc-predef.h:
+
+include/ffi.h:
+
+include/ffitarget.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/stddef.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/bits/alltypes.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/limits.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/features.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/bits/limits.h:
+
+../include/ffi_common.h:
+
+fficonfig.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/alloca.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/string.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/strings.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/stdlib.h:

@@ -1,0 +1,116 @@
+src/tramp.lo: ../src/tramp.c \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/stdc-predef.h \
+ fficonfig.h include/ffi.h include/ffitarget.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/stddef.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/bits/alltypes.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/limits.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/features.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/bits/limits.h \
+ ../include/ffi_common.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/alloca.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/string.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/strings.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/stdio.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/unistd.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/bits/posix.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/stdlib.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/stdint.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/bits/stdint.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/fcntl.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/bits/fcntl.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/pthread.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/sched.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/time.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/sys/mman.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/bits/mman.h \
+ ../include/tramp.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/linux/limits.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/linux/types.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/asm/types.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/asm-generic/types.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/asm-generic/int-ll64.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/asm/bitsperlong.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/asm-generic/bitsperlong.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/linux/posix_types.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/linux/stddef.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/asm/posix_types.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/asm/posix_types_64.h \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/asm-generic/posix_types.h
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/stdc-predef.h:
+
+fficonfig.h:
+
+include/ffi.h:
+
+include/ffitarget.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/stddef.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/bits/alltypes.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/limits.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/features.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/bits/limits.h:
+
+../include/ffi_common.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/alloca.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/string.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/strings.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/stdio.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/unistd.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/bits/posix.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/stdlib.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/stdint.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/bits/stdint.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/fcntl.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/bits/fcntl.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/pthread.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/sched.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/time.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/sys/mman.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/bits/mman.h:
+
+../include/tramp.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/linux/limits.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/linux/types.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/asm/types.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/asm-generic/types.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/asm-generic/int-ll64.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/asm/bitsperlong.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/asm-generic/bitsperlong.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/linux/posix_types.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/linux/stddef.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/asm/posix_types.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/asm/posix_types_64.h:
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/asm-generic/posix_types.h:

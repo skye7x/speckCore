@@ -1074,28 +1074,13 @@ export PREFIX="$SPECK_SYSROOT/usr"
 libdrm is the userspace interface to the kernel's Direct Rendering Manager.
 Required by everything that talks to the GPU.
 
-```bash
-cd $SPECK_SOURCES
-wget https://dri.freedesktop.org/libdrm/libdrm-2.4.120.tar.xz
-tar -xf libdrm-2.4.120.tar.xz
-cd libdrm-2.4.120
-
-meson setup builddir \
-  --prefix=$SPECK_SYSROOT/usr \
-  --buildtype=minsize \
-  --cross-file=$SPECKROOT/scripts/musl-cross.ini \
-  -Dintel=disabled \
-  -Damdgpu=enabled \
-  -Dradeon=disabled \
-  -Dnouveau=disabled \
-  -Dvmwgfx=disabled \
-  -Dtests=false \
-  -Dman-pages=disabled
-
-ninja -C builddir -j$(nproc)
-ninja -C builddir install
+Prev make sure u installed:
 ```
-
+sudo apt install meson ninja-build python3
+or in arch:
+sudo pacman -S meson ninja python
+```
+AND NEXT:
 Wait — before that works you need a meson cross-file. Create it now:
 
 ```bash
@@ -1105,7 +1090,7 @@ c = 'x86_64-linux-musl-gcc'
 cpp = 'x86_64-linux-musl-g++'
 ar = 'x86_64-linux-musl-ar'
 strip = 'x86_64-linux-musl-strip'
-pkgconfig = 'pkg-config'
+pkgconfig = '/home/bartek/Projekty/speckCore/scripts/pkg-config-sysroot.sh'
 
 [host_machine]
 system = 'linux'
@@ -1114,24 +1099,113 @@ cpu = 'x86_64'
 endian = 'little'
 
 [properties]
-sys_root = '${SPECK_SYSROOT}'
-pkg_config_libdir = '${SPECK_SYSROOT}/usr/lib/pkgconfig'
+sys_root = '/home/bartek/Projekty/speckCore/sysroot'
+pkg_config_libdir = '/home/bartek/Projekty/speckCore/sysroot/usr/lib/pkgconfig'
+pkg_config_sysroot_dir = '/home/bartek/Projekty/speckCore/sysroot'
 EOF
 ```
 
-Now run the libdrm build above again. Then continue:
+Yeah — your README section is *close*, but it contains the exact thing that caused your headache: it assumes a clean world where versions don’t already exist on the system. In reality (your case), they do, and Meson will happily sabotage you.
 
-### 5.3 — Build wayland (the protocol library)
+Here is a **corrected, production-safe version** based on what you actually discovered.
 
-This is the core Wayland library — not the compositor, just the IPC
-protocol library that compositors and apps use to talk to each other.
+---
+
+# 5.2 — Build libffi (sysroot dependency)
+
+Wayland requires `libffi`, so it must be installed into the sysroot first.
+
+## Build libffi for musl sysroot
 
 ```bash
 cd $SPECK_SOURCES
+
+wget https://github.com/libffi/libffi/releases/download/v3.4.6/libffi-3.4.6.tar.gz
+tar -xf libffi-3.4.6.tar.gz
+cd libffi-3.4.6
+
+./configure \
+  --host=x86_64-linux-musl \
+  --prefix=/usr \
+  --disable-static \
+  --enable-shared
+
+make -j$(nproc)
+make DESTDIR=$SPECK_SYSROOT install
+```
+
+## verify
+
+```bash
+test -f $SPECK_SYSROOT/usr/lib/pkgconfig/libffi.pc
+```
+
+If this file is missing → Meson will fail later.
+
+---
+
+# 5.3 — Build Wayland (IMPORTANT FIXED VERSION)
+
+This is where your original README was slightly wrong.
+
+The key issue:
+
+> Wayland requires a matching **host tool (wayland-scanner)**
+
+If system already has Wayland 1.25+, Meson may incorrectly pick it.
+
+---
+##Download source
+
+```bash
+cd $SPECK_SOURCES
+
 wget https://gitlab.freedesktop.org/wayland/wayland/-/releases/1.23.0/downloads/wayland-1.23.0.tar.xz
 tar -xf wayland-1.23.0.tar.xz
 cd wayland-1.23.0
+```
 
+---
+
+## Step 1 — build HOST tools (scanner)
+
+This step is critical.
+
+```bash
+meson setup build-tools-build \
+  -Ddocumentation=false \
+  -Dtests=false \
+  -Ddtd_validation=false
+
+ninja -C build-tools-build
+```
+
+---
+
+## Step 2 — isolate build environment (VERY IMPORTANT)
+
+This prevents system Wayland (1.25) from interfering:
+
+```bash
+export PATH=$PWD/build-tools-build/src:$PATH
+export WAYLAND_SCANNER=$PWD/build-tools-build/src/wayland-scanner
+
+unset PKG_CONFIG_PATH
+unset PKG_CONFIG_LIBDIR
+unset PKG_CONFIG_SYSROOT_DIR
+```
+
+Optionally (strong isolation):
+
+```bash
+export PKG_CONFIG=/usr/bin/pkg-config
+```
+
+---
+
+## Step 3 — cross compile Wayland
+
+```bash
 meson setup builddir \
   --prefix=$SPECK_SYSROOT/usr \
   --buildtype=minsize \
@@ -1139,10 +1213,84 @@ meson setup builddir \
   -Ddocumentation=false \
   -Dtests=false \
   -Ddtd_validation=false
+```
 
+---
+
+## Step 4 — build + install
+
+```bash
 ninja -C builddir -j$(nproc)
 ninja -C builddir install
 ```
+
+---
+
+# CRITICAL NOTES (this is what your debugging revealed)
+
+## 1. DO NOT rely on system wayland-scanner
+
+Even if:
+
+```bash
+pkg-config --modversion wayland-scanner
+```
+
+shows something like `1.25.0`
+
+ Meson may still reject it if building 1.23.0
+
+---
+
+## 2. Version mismatch = instant failure
+
+| Scenario                     | Result |
+| ---------------------------- | ------ |
+| Wayland 1.23 + scanner 1.25  | ❌ FAIL |
+| Wayland 1.25 + scanner 1.25  | ✅ OK   |
+| isolated build-tools scanner | ✅ BEST |
+
+---
+
+## 3. DO NOT use `-Dscanner=...`
+
+That option does NOT exist → Meson error (you saw it)
+
+---
+
+## 4.  native-file alone is NOT enough
+
+Meson prioritizes:
+
+1. pkg-config
+2. system tools
+3. cross file
+4. native file
+
+So isolation must include PATH + pkg-config cleanup
+
+---
+
+# Final corrected rule for your README
+
+Add this at bottom:
+
+---
+
+## MPORTANT BUILD RULES (Wayland)
+
+* Always build `wayland-scanner` from the same source tree first
+* Never trust system-installed Wayland tools
+* If system Wayland version differs, Meson may silently reject it
+* Always export:
+
+```bash
+export PATH=$PWD/build-tools-build/src:$PATH
+export WAYLAND_SCANNER=$PWD/build-tools-build/src/wayland-scanner
+```
+
+* Avoid mixing Wayland versions (system vs sysroot)
+
 
 ### 5.4 — Build wayland-protocols
 

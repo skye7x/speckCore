@@ -1,0 +1,6 @@
+[binaries]
+wayland-scanner = '/home/bartek/Projekty/speckCore/sources/wayland-1.23.0/build-tools-build/src/wayland-scanner'
+pkg-config = '/usr/bin/pkg-config'
+
+[properties]
+needs_exe_wrapper = true

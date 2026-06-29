@@ -1,0 +1,16 @@
+src/x86/win64.lo: ../src/x86/win64.S \
+ /home/bartek/speckcore/toolchain/x86_64-linux-musl/include/stdc-predef.h \
+ fficonfig.h include/ffi.h include/ffitarget.h ../include/ffi_cfi.h \
+ ../src/x86/asmnames.h
+
+/home/bartek/speckcore/toolchain/x86_64-linux-musl/include/stdc-predef.h:
+
+fficonfig.h:
+
+include/ffi.h:
+
+include/ffitarget.h:
+
+../include/ffi_cfi.h:
+
+../src/x86/asmnames.h:
